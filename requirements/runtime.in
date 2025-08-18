@@ -13,7 +13,7 @@ id ~= 1.0
 # NOTE: This is pulled in transitively through `twine`, but we also declare
 # NOTE: it explicitly here because `oidc-exchange.py` uses it.
 # Ref: https://github.com/di/id
-requests
+requests >= 2.32.4
 
 # NOTE: Used to generate attestations.
 pypi-attestations ~= 0.0.15
