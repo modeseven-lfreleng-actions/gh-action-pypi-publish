@@ -97,12 +97,12 @@ runs:
   using: docker
   image: Dockerfile
   args:
-  - ${{ inputs.user }}
-  - ${{ inputs.password }}
-  - ${{ inputs.repository-url }}
-  - ${{ inputs.packages-dir }}
-  - ${{ inputs.verify-metadata }}
-  - ${{ inputs.skip-existing }}
-  - ${{ inputs.verbose }}
-  - ${{ inputs.print-hash }}
-  - ${{ inputs.attestations }}
+    - ${{ inputs.user }}
+    - ${{ inputs.password }}
+    - ${{ inputs.repository-url }}
+    - ${{ inputs.packages-dir }}
+    - ${{ inputs.verify-metadata }}
+    - ${{ inputs.skip-existing }}
+    - ${{ inputs.verbose }}
+    - ${{ inputs.print-hash }}
+    - ${{ inputs.attestations }}

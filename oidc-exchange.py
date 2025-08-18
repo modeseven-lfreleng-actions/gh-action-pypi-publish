@@ -11,9 +11,10 @@ from typing import NoReturn
 from urllib.parse import urlparse
 
 import id  # pylint: disable=redefined-builtin
-import requests
+import requests  # type: ignore[import-untyped]
 
-_GITHUB_STEP_SUMMARY = Path(os.getenv('GITHUB_STEP_SUMMARY'))
+_GITHUB_STEP_SUMMARY_ENV = os.getenv('GITHUB_STEP_SUMMARY')
+_GITHUB_STEP_SUMMARY: Path | None = Path(_GITHUB_STEP_SUMMARY_ENV) if _GITHUB_STEP_SUMMARY_ENV else None
 
 # The top-level error message that gets rendered.
 # This message wraps one of the other templates/messages defined below.
@@ -115,8 +116,9 @@ a few minutes and try again.
 
 
 def die(msg: str) -> NoReturn:
-    with _GITHUB_STEP_SUMMARY.open('a', encoding='utf-8') as io:
-        print(_ERROR_SUMMARY_MESSAGE.format(message=msg), file=io)
+    if _GITHUB_STEP_SUMMARY is not None:
+        with _GITHUB_STEP_SUMMARY.open('a', encoding='utf-8') as io:
+            print(_ERROR_SUMMARY_MESSAGE.format(message=msg), file=io)
 
     # HACK: GitHub Actions' annotations don't work across multiple lines naively;
     # translating `\n` into `%0A` (i.e., HTML percent-encoding) is known to work.
@@ -170,7 +172,8 @@ def render_claims(token: str) -> str:
 
     # urlsafe_b64decode needs padding; JWT payloads don't contain any.
     payload += '=' * (4 - (len(payload) % 4))
-    claims = json.loads(base64.urlsafe_b64decode(payload))
+    decoded = base64.urlsafe_b64decode(payload)
+    claims = json.loads(decoded.decode('utf-8'))
 
     def _get(name: str) -> str:  # noqa: WPS430
         return claims.get(name, 'MISSING')
@@ -199,7 +202,7 @@ def event_is_third_party_pr() -> bool:
         return False
 
     try:
-        event = json.loads(Path(event_path).read_bytes())
+        event = json.loads(Path(event_path).read_text(encoding='utf-8'))
     except json.JSONDecodeError:
         debug('unexpected: GITHUB_EVENT_PATH does not contain valid JSON')
         return False
@@ -210,8 +213,9 @@ def event_is_third_party_pr() -> bool:
         return False
 
 
-repository_url = get_normalized_input('repository-url')
-repository_domain = urlparse(repository_url).netloc
+repository_url_in = get_normalized_input('repository-url')
+repository_url = repository_url_in if repository_url_in is not None else 'https://upload.pypi.org/legacy/'
+repository_domain: str = urlparse(repository_url).netloc
 token_exchange_url = f'https://{repository_domain}/_/oidc/mint-token'
 
 # Indices are expected to support `https://{domain}/_/oidc/audience`,

@@ -10,8 +10,8 @@ on:
   workflow_dispatch:
   pull_request:
     branches:
-    - main
-    - master
+      - main
+      - master
     paths: ['.github/**']
 
 permissions: {}
