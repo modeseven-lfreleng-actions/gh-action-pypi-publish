@@ -16,7 +16,8 @@ sigstore_logger = logging.getLogger('sigstore')
 sigstore_logger.setLevel(logging.DEBUG)
 sigstore_logger.addHandler(logging.StreamHandler())
 
-_GITHUB_STEP_SUMMARY = Path(os.getenv('GITHUB_STEP_SUMMARY'))
+_GITHUB_STEP_SUMMARY_ENV = os.getenv('GITHUB_STEP_SUMMARY')
+_GITHUB_STEP_SUMMARY: Path | None = Path(_GITHUB_STEP_SUMMARY_ENV) if _GITHUB_STEP_SUMMARY_ENV else None
 
 # The top-level error message that gets rendered.
 # This message wraps one of the other templates/messages defined below.
@@ -39,8 +40,9 @@ suggesting a transient error.
 
 
 def die(msg: str) -> NoReturn:
-    with _GITHUB_STEP_SUMMARY.open('a', encoding='utf-8') as io:
-        print(_ERROR_SUMMARY_MESSAGE.format(message=msg), file=io)
+    if _GITHUB_STEP_SUMMARY is not None:
+        with _GITHUB_STEP_SUMMARY.open('a', encoding='utf-8') as io:
+            print(_ERROR_SUMMARY_MESSAGE.format(message=msg), file=io)
 
     # HACK: GitHub Actions' annotations don't work across multiple lines naively;
     # translating `\n` into `%0A` (i.e., HTML percent-encoding) is known to work.
@@ -90,6 +92,8 @@ def get_identity_token() -> IdentityToken:
     # from the environment or if the token is malformed.
     # NOTE: audience is always sigstore.
     oidc_token = detect_credential()
+    if oidc_token is None:
+        raise IdentityError('No identity token detected')
     return IdentityToken(oidc_token)
 
 

@@ -111,7 +111,7 @@ requests==2.32.3
     #   twine
 requests-toolbelt==1.0.0
     # via twine
-rfc3161-client==1.0.1
+rfc3161-client==1.0.3
     # via sigstore
 rfc3986==2.0.0
     # via
