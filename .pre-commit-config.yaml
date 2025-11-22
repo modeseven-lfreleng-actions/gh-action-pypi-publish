@@ -3,6 +3,8 @@
 # SPDX-FileCopyrightText: 2025 The Linux Foundation
 
 ci:
+  # pre-commit.ci sandbox prevents network calls; disable gha-workflow-linter
+  skip: [gha-workflow-linter]
   autofix_commit_msg: |
     Chore: pre-commit autofixes
 
@@ -50,7 +52,7 @@ repos:
         types: [yaml]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 455f64b32459518aa82ec33b63f799ed048d65a9  # frozen: v0.12.8
+    rev: fa1ed65ba95bfa7771a71003a9d74402541f5a5c  # frozen: v0.14.6
     hooks:
       - id: ruff
         files: ^(scripts|tests|custom_components)/.+\.py$
@@ -59,22 +61,15 @@ repos:
         files: ^(scripts|tests|custom_components)/.+\.py$
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: 412de98d50e846f31ea6f4b0ad036f2c24a7a024  # frozen: v1.17.1
+    rev: 9f70dc58c23dfcca1b97af99eaeee3140a807c7e  # frozen: v1.18.2
     hooks:
       - id: mypy
-        additional_dependencies:
-          - types-requests
-          - id
-          - pypi-attestations
-          - sigstore
-          - packaging
-          - requests
 
-  # - repo: https://github.com/btford/write-good
-  #   rev: ab66ce10136dfad5146e69e70f82a3efac8842c1 # frozen: v1.0.8
-  #   hooks:
-  #     - id: write-good
-  #       files: "\\.(rst|md|markdown|mdown|mkdn)$"
+  - repo: https://github.com/btford/write-good
+    rev: ab66ce10136dfad5146e69e70f82a3efac8842c1 # frozen: v1.0.8
+    hooks:
+      - id: write-good
+        files: "\\.(rst|md|markdown|mdown|mkdn)$"
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: 745eface02aef23e168a8afb6b5737818efbea95  # frozen: v0.11.0.1
@@ -82,20 +77,20 @@ repos:
       - id: shellcheck
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: 192ad822316c3a22fb3d3cc8aa6eafa0b8488360  # frozen: v0.45.0
+    rev: c8fd5003603dd6f12447314ecd935ba87c09aff5  # frozen: v0.46.0
     hooks:
       - id: markdownlint
         args: ["--fix"]
 
   - repo: https://github.com/fsfe/reuse-tool
-    rev: 60dfc6b2ad9e1f3eabfbcf3a0dc202ee89dc5a00 # frozen: v5.0.2
+    rev: 9fabf9eb815a57aac116b435e8346c200cdb8604  # frozen: v6.2.0
     hooks:
       - id: reuse
 
   # Replaces: https://github.com/rhysd/actionlint
   # Permits actionlint to run both locally and with precommit.ci/GitHub
   - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
-    rev: a185be0fd5b45112845b700d91b81050c75579e2 # frozen: v1.7.7.23
+    rev: 381d5e68de9fe958938da811f2e094a8f90e8195  # frozen: v1.7.9.24
     hooks:
       - id: actionlint
 
@@ -105,8 +100,14 @@ repos:
     hooks:
       - id: codespell
 
+  - repo: https://github.com/lfreleng-actions/gha-workflow-linter
+    rev: 6e25590048a9b9c49d81656586dd083f47bb4f93  # frozen: v0.1.11
+    hooks:
+      - id: gha-workflow-linter
+        args: [lint, .github/workflows/, --verbose]
+
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 54da05914997e6b04e4db33ed6757d744984c68b  # frozen: 0.33.2
+    rev: 16a6ad2fead09286ee6eb6b0a3fab55655a6c22a  # frozen: 0.35.0
     hooks:
       - id: check-github-actions
       - id: check-github-workflows
