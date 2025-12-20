@@ -1,6 +1,3 @@
-# SPDX-License-Identifier: BSD-3-Clause
-# SPDX-FileCopyrightText: Copyright © 2019, Sviatoslav Sydorenko
-
     # via -r requirements/runtime-prerequisites.in
 
 # The following packages are considered to be unsafe in a requirements file:
