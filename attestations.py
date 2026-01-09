@@ -9,7 +9,7 @@ from typing import NoReturn
 
 from pypi_attestations import Attestation, Distribution
 from sigstore.oidc import IdentityError, IdentityToken, detect_credential
-from sigstore.sign import Signer, SigningContext
+from sigstore.sign import Signer
 
 # Be very verbose.
 sigstore_logger = logging.getLogger('sigstore')
@@ -111,10 +111,11 @@ def main() -> None:
 
     dist_paths = collect_dists(packages_dir)
 
-    with SigningContext.production().signer(identity, cache=True) as s:
-        debug(f'attesting to dists: {dist_paths}')
-        for dist_path in dist_paths:
-            attest_dist(dist_path, s)
+    # Use the new Signer.production() API for sigstore v4.x
+    signer = Signer.production()
+    debug(f'attesting to dists: {dist_paths}')
+    for dist_path in dist_paths:
+        attest_dist(dist_path, signer)
 
 
 if __name__ == '__main__':
