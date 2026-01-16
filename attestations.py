@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import NoReturn
 
 from pypi_attestations import Attestation, Distribution
+from sigstore.models import ClientTrustConfig
 from sigstore.oidc import IdentityError, IdentityToken, detect_credential
 from sigstore.sign import Signer, SigningContext
 
@@ -111,7 +112,9 @@ def main() -> None:
 
     dist_paths = collect_dists(packages_dir)
 
-    with SigningContext.production().signer(identity, cache=True) as s:
+    trust_config = ClientTrustConfig.production()
+    signing_ctx = SigningContext.from_trust_config(trust_config)
+    with signing_ctx.signer(identity, cache=True) as s:
         debug(f'attesting to dists: {dist_paths}')
         for dist_path in dist_paths:
             attest_dist(dist_path, s)
