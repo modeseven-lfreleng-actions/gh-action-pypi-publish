@@ -8,7 +8,7 @@ twine >= 6.1
 
 # NOTE: Used to detect an ambient OIDC credential for OIDC publishing,
 # NOTE: as well as PEP 740 attestations.
-id ~= 1.0
+id ~= 1.6
 
 # NOTE: This is pulled in transitively through `twine`, but we also declare
 # NOTE: it explicitly here because `oidc-exchange.py` uses it.
