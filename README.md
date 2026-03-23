@@ -274,17 +274,17 @@ The Dockerfile and associated scripts and documentation in this project
 are released under the [BSD 3-clause license](LICENSE.md).
 
 [🧪 GitHub Actions CI/CD workflow tests badge]:
-https://github.com/pypa/gh-action-pypi-publish/actions/workflows/testing.yaml/badge.svg?branch=main&event=push
+https://github.com/modeseven-lfreleng-actions/gh-action-pypi-publish/actions/workflows/testing.yaml/badge.svg?branch=main&event=push
 [GHA workflow runs list]:
-https://github.com/pypa/gh-action-pypi-publish/actions/workflows/testing.yaml?query=branch%3Amain
+https://github.com/modeseven-lfreleng-actions/gh-action-pypi-publish/actions/workflows/testing.yaml?query=branch%3Amain
 
 [pre-commit.ci results page]:
-https://results.pre-commit.ci/latest/github/pypa/gh-action-pypi-publish/unstable/v1
+https://results.pre-commit.ci/latest/github/modeseven-lfreleng-actions/gh-action-pypi-publish/main
 [pre-commit.ci status badge]:
-https://results.pre-commit.ci/badge/github/pypa/gh-action-pypi-publish/unstable/v1.svg
+https://results.pre-commit.ci/badge/github/modeseven-lfreleng-actions/gh-action-pypi-publish/main.svg
 
 [per-release announcement discussions]:
-https://github.com/pypa/gh-action-pypi-publish/discussions/categories/announcements
+https://github.com/modeseven-lfreleng-actions/gh-action-pypi-publish/discussions/categories/announcements
 
 [Creating & using secrets]:
 https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets
