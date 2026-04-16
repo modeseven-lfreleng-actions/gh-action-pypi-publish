@@ -60,7 +60,7 @@ more-itertools==10.8.0
     #   jaraco-functools
 nh3==0.3.2
     # via readme-renderer
-packaging==25.0
+packaging==26.1
     # via
     #   -c runtime-constraints.in
     #   -r runtime.in
