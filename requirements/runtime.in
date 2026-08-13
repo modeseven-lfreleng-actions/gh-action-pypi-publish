@@ -22,7 +22,7 @@ requests >= 2.34.2
 
 # NOTE: Used to generate attestations.
 pypi-attestations ~= 0.0.29
-sigstore >= 3.6.2
+sigstore >= 4.4.0
 
 # NOTE: Used to detect the PyPI package name from the distribution files
 packaging
