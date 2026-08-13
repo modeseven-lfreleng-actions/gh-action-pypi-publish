@@ -17,11 +17,16 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # SPDX-FileCopyrightText: Copyright © 2019, Sviatoslav Sydorenko
 
-# NOTE: Metadata 2.5 support needs packaging 26.1. Twine 7.0 already
-# NOTE: requires packaging >= 26.3 itself, so this floor is currently
-# NOTE: redundant. It is kept to keep the requirement explicit, and to
-# NOTE: guard against a future twine release declaring a lower bound
-# NOTE: that is too low for the metadata version it emits support for,
-# NOTE: which is what happened with twine 6.1 and metadata 2.4 below.
+# NOTE: Metadata 2.5 support needs packaging 26.1, and twine 7.0
+# NOTE: already requires that version or newer itself, so this floor
+# NOTE: is currently redundant. It is kept to keep the requirement
+# NOTE: explicit, and to guard against a future twine release
+# NOTE: declaring a lower bound that is too low for the metadata
+# NOTE: version it emits support for, which is what happened with
+# NOTE: twine 6.1 and metadata 2.4 below.
+# NOTE: Do not write a version specifier for the pinned project into
+# NOTE: this comment. Dependabot rewrites any such literal when it
+# NOTE: bumps the pin below, which previously left the note stating
+# NOTE: a twine requirement that does not exist.
 # Ref: https://github.com/pypa/twine/pull/1180
 packaging >= 26.3
