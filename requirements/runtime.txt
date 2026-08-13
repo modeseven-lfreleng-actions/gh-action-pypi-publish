@@ -94,7 +94,7 @@ pypi-attestations==0.0.29
     # via -r runtime.in
 readme-renderer==44.0
     # via twine
-requests==2.33.1
+requests==2.34.2
     # via
     #   -r runtime.in
     #   id
