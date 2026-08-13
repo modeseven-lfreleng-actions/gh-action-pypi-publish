@@ -112,7 +112,7 @@ rfc3986==2.0.0
     #   twine
 rfc8785==0.1.4
     # via sigstore
-rich==14.2.0
+rich==14.3.4
     # via
     #   sigstore
     #   twine
@@ -132,7 +132,7 @@ sigstore-rekor-types==0.0.18
     # via sigstore
 tuf==6.0.0
     # via sigstore
-twine==6.2.0
+twine==7.0.0
     # via -r runtime.in
 typing-extensions==4.15.0
     # via
