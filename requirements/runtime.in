@@ -3,8 +3,13 @@
 
 -c runtime-constraints.in  # limits known broken versions
 
-# NOTE: v6.1 is needed to support metadata v2.4 including PEP 639
-twine >= 6.1
+# NOTE: v7.0 is needed to support metadata v2.5, which build backends
+# NOTE: such as Hatchling >= 1.30 now emit by default. (v6.1 covered
+# NOTE: metadata v2.4 / PEP 639.) Twine replaces `packaging`'s list of
+# NOTE: valid metadata versions with its own hard-coded copy, so
+# NOTE: bumping `packaging` alone is not sufficient.
+# Ref: https://github.com/pypa/hatch/releases/tag/hatchling-v1.30.0
+twine >= 7.0
 
 # NOTE: Used to detect an ambient OIDC credential for OIDC publishing,
 # NOTE: as well as PEP 740 attestations.
