@@ -13,6 +13,13 @@ on:
 
 permissions: {}
 
+# Tags are independent of one another, so runs are grouped per tag
+# rather than cancelled. A release promotion must not be interrupted
+# part way through by a later tag push.
+concurrency:
+  group: "tag-push-${{ github.ref }}"
+  cancel-in-progress: false
+
 jobs:
   validate_tag:
     name: 'Validate Tag'
@@ -53,7 +60,7 @@ jobs:
     needs: validate_tag
     runs-on: 'ubuntu-latest'
     permissions:
-      contents: write
+      contents: write  # promote the draft release for the pushed tag
     timeout-minutes: 5
     steps:
       # Harden the runner used by this workflow
