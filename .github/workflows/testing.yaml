@@ -31,8 +31,33 @@ env:
 
 jobs:
   testing:
+    name: 'testing (${{ matrix.backend-name }})'
     runs-on: 'ubuntu-24.04'
     timeout-minutes: 5  # Increase this timeout value as needed
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # A pinned backend gives a stable baseline that only changes
+          # when the pin below is bumped deliberately.
+          - backend-name: 'setuptools'
+            backend-requires: 'setuptools == 80.4.0'
+            backend-module: 'setuptools.build_meta'
+          # An unpinned backend deliberately floats to its newest
+          # release, so the newest core metadata version is always
+          # exercised against the twine pinned in runtime.txt.
+          #
+          # This leg exists because a pinned twine silently stops
+          # accepting distributions once a build backend starts
+          # emitting a metadata version it does not know about.
+          # Hatchling 1.30 began emitting Metadata-Version 2.5, which
+          # the twine pinned at the time rejected, breaking real
+          # releases while this workflow stayed green: the setuptools
+          # stub above still emits 2.4 and cannot reproduce it.
+          - backend-name: 'hatchling'
+            backend-requires: 'hatchling'
+            backend-module: 'hatchling.build'
 
     services:
       devpi:
@@ -72,9 +97,9 @@ jobs:
           CONTENTS: |
             [build-system]
             requires = [
-              "setuptools == 80.4.0",
+              "${{ matrix.backend-requires }}",
             ]
-            build-backend = "setuptools.build_meta"
+            build-backend = "${{ matrix.backend-module }}"
 
             [project]
             name = "test-package"
@@ -82,7 +107,32 @@ jobs:
             readme = "README.md"
 
       - name: 'Build the stub package sdist and wheel distributions'
+        # Build isolation resolves the backend from the index, so the
+        # unpinned leg picks up its newest release on every run.
         run: python3 -m build
+
+      - name: 'Report the core metadata version produced'
+        # Recorded to make metadata drift visible in the log and the job
+        # summary. The value rises over time on the unpinned leg; it is
+        # the version the pinned twine has to be able to parse.
+        env:
+          BACKEND_NAME: ${{ matrix.backend-name }}
+        run: |
+          metadata_version="$(
+            python3 -c '
+          import glob, zipfile
+          wheel = sorted(glob.glob("dist/*.whl"))[0]
+          archive = zipfile.ZipFile(wheel)
+          entry = next(
+              name for name in archive.namelist()
+              if name.endswith(".dist-info/METADATA")
+          )
+          print(archive.read(entry).decode().splitlines()[0])
+          '
+          )"
+          echo "${BACKEND_NAME}: ${metadata_version}"
+          echo "- ${BACKEND_NAME}: \`${metadata_version}\`" \
+            >> "$GITHUB_STEP_SUMMARY"
 
       - name: 'Register the stub package in devpi'
         run: twine register dist/*.tar.gz
