@@ -9,6 +9,14 @@ on:   # yamllint disable-line rule:truthy
   pull_request:
   workflow_dispatch:
 
+permissions: {}
+
+# Supersede in-flight runs for the same ref: these are pure tests with
+# no publishing side effects, so cancelling stale runs is safe.
+concurrency:
+  group: "testing-${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
 env:
   devpi-password: 'abcd1234'
   devpi-username: 'root'
@@ -34,6 +42,9 @@ jobs:
     name: 'testing (${{ matrix.backend-name }})'
     runs-on: 'ubuntu-24.04'
     timeout-minutes: 5  # Increase this timeout value as needed
+
+    permissions:
+      contents: read  # check out the action being tested
 
     strategy:
       fail-fast: false
@@ -61,7 +72,10 @@ jobs:
 
     services:
       devpi:
-        image: 'muccg/devpi'
+        # Pinned by digest: an unpinned tag lets the registry swap the
+        # image contents underneath a run.
+        # yamllint disable-line rule:line-length
+        image: 'muccg/devpi@sha256:ee3fb337aef6d2d2c560781ee80826eff61b75175820c7585ab71313e2d37a60'
         env:
           DEVPI_PASSWORD: "${{ env.devpi-password }}"
         ports:
@@ -73,6 +87,9 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
         with:
           path: 'test'
+          # Nothing here pushes back to the repository, so the checkout
+          # credential is not needed beyond the clone itself.
+          persist-credentials: false
 
       - name: 'Upgrade pip'
         run: python -m pip install --upgrade pip
@@ -141,7 +158,7 @@ jobs:
           TWINE_PASSWORD: ${{ env.devpi-password }}
           TWINE_REPOSITORY_URL: >-
             http://localhost:${{
-              job.services.devpi.ports[env.devpi-port]
+              job.services.devpi.ports['3141']
             }}/${{
               env.devpi-username
             }}/public/
