@@ -76,7 +76,7 @@ jobs:
 
       - name: 'Promote draft release'
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/draft-release-promote-action@072990900b99030363d81d4131c2bf2855f07df0  # v0.1.4
+        uses: lfreleng-actions/draft-release-promote-action@358264a2efca5ac359a90718373cbce18016bd27  # v0.1.7
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           tag: "${{ needs.validate_tag.outputs.tag }}"
